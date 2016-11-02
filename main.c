@@ -25,7 +25,8 @@ int main()
 		empty = putRandVal(field, empty);
 	}
 	int input = 0;
-	while((empty != 0) && (input = getch())){//поправить условие empty != 0
+	int canContinue(int field[][4]);
+	while((empty != 0 || canContinue(field)) && (input = getch())){//поправить условие empty != 0
 		switch(input){
 			case 'w':
 			case 'W':
@@ -45,6 +46,18 @@ int main()
 				break;
 		}
 	}
+	printf("THE END\nSCORE: %i", score);
+	getchar();
+}
+int canContinue(int field[][4]){
+	for(int i = 0; i < height; ++i){
+		for(int j = 0; j < width; ++j){
+			if((i < height - 1) && (field[i + 1][j] == field[i][j]) || (j < width - 1) && (field[i][j + 1] == field[i][j])){
+				return 1;
+			}
+		}
+	}
+	return 0;
 }
 
 void showField(int f[][width]){
