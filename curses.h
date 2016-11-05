@@ -1,9 +1,6 @@
 #ifndef PDC_DLL_BUILD
 # define PDC_DLL_BUILD
 #endif
-#ifndef PDC_WIDE
-# define PDC_WIDE
-#endif
 
 /* Public Domain Curses */
 
@@ -335,16 +332,20 @@ typedef struct
 #ifdef PDC_DLL_BUILD
 # ifdef CURSES_LIBRARY
 #  define PDCEX __declspec(dllexport) extern
+#define xyi "1";
 # else
 #  define PDCEX __declspec(dllimport)
+#define xyi "2";
 # endif
 #else
 # define PDCEX extern
+#define xyi "3";
 #endif
 
 PDCEX  int          LINES;        /* terminal height */
 PDCEX  int          COLS;         /* terminal width */
 PDCEX  WINDOW       *stdscr;      /* the default screen window */
+
 PDCEX  WINDOW       *curscr;      /* the current screen image */
 PDCEX  SCREEN       *SP;          /* curses variables */
 PDCEX  MOUSE_STATUS Mouse_status;

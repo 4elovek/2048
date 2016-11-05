@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-//#include "curses.h"
 #define width 4
 #define height 4
 #define probOf2 0.05
@@ -63,7 +62,7 @@ int canContinue(int field[][4]){
 void showField(int f[][width]){
 	printf("\nScore: %i\n", score);
 	for(int i = 0; i < height; ++i){
-		printf("\n\n\n", score);
+		printf("\n\n\n");
 		for(int j = 0; j < width; ++j){
 			if(f[i][j] != 0){
 				printf("%4i ", f[i][j]);
