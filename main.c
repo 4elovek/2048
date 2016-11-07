@@ -1,17 +1,28 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-//#include "curses.h"
+#include <curses.h>
 #define width 4
 #define height 4
 #define probOf2 0.05
-int putRandVal(int f[][4], int e);
-void showField(int f[][4]);
+#define cwdt 4 //cell width
+#define chorizpad 2 //cell pad vertical(in rows)
+#define cvertpad 2 //cell pad vertical(in rows)
+int fy, fx;   //field left top corner coordinates
+int putRandVal(int f[][width], int e);
+void showField(int f[][width]);
 static int score = 0;
-void moveHoriz(int left, int field[][4], int *empty);
-void moveVert(int up, int field[][4], int *empty);
+void moveHoriz(int left, int field[][width], int *empty);
+void moveVert(int up, int field[][width], int *empty);
 int main()
 {
+	initscr();
+	attron(A_UNDERLINE);
+	fx = (getmaxx(stdscr) - cwdt * width - (width - 1) * chorizpad) / 2;
+	fy = (getmaxy(stdscr) - height - (height - 1) * cvertpad) / 2;
+	noecho();
+	cbreak();
+	keypad(stdscr, TRUE);
 	srand(time(NULL));
 	int  field[height][width];
 	
@@ -25,31 +36,39 @@ int main()
 		empty = putRandVal(field, empty);
 	}
 	int input = 0;
-	int canContinue(int field[][4]);
-	while((empty != 0 || canContinue(field)) && (input = getch())){//поправить условие empty != 0
+	int canContinue(int field[][width]);
+	while((empty != 0 || canContinue(field)) && ((input = getch()) != EOF)){
 		switch(input){
 			case 'w':
 			case 'W':
+			case KEY_UP:
 				moveVert(1, field, &empty);
 				break;
 			case 's':
 			case 'S':
+			case KEY_DOWN:
 				moveVert(0, field, &empty);
 				break;
 			case 'a':
 			case 'A':
+			case KEY_LEFT:
 				moveHoriz(1, field, &empty);
 				break;
 			case 'd':
 			case 'D':
+			case KEY_RIGHT:
 				moveHoriz(0, field, &empty);
 				break;
 		}
 	}
-	printf("THE END\nSCORE: %i", score);
+	clear();
+	mvprintw(fy, fx, "THE END");
+	mvprintw(fy + 1, fx, "SCORE: %i", score);
+	refresh();
 	getchar();
+	endwin();
 }
-int canContinue(int field[][4]){
+int canContinue(int field[][width]){
 	for(int i = 0; i < height; ++i){
 		for(int j = 0; j < width; ++j){
 			if((i < height - 1) && (field[i + 1][j] == field[i][j]) || (j < width - 1) && (field[i][j + 1] == field[i][j])){
@@ -61,25 +80,26 @@ int canContinue(int field[][4]){
 }
 
 void showField(int f[][width]){
-	printf("\nScore: %i\n", score);
+	//printw("\nScore: %i\n", score);
+	mvprintw(0, 0, "SCORE: %i", score);
 	for(int i = 0; i < height; ++i){
-		printf("\n\n\n", score);
+		mvprintw(fy + i * cvertpad, fx, "||");
 		for(int j = 0; j < width; ++j){
 			if(f[i][j] != 0){
-				printf("%4i ", f[i][j]);
+				printw("%4i||", f[i][j]);
 			}else{
-				printf("____ ");
+				printw("    ||");
 			}
 		}
 	}
-	printf("\n\n-----------------\n\n\n\n\n");
+	refresh();
 }
 
 int nextVal(){
 	return ((double)rand()/(double)RAND_MAX) < probOf2 ? 2 : 4; 
 }
 
-int putRandVal(int f[][4], int e){
+int putRandVal(int f[][width], int e){
 	int a = rand() % (e); 
 	for(int i = 0; i < height; ++i){
 		for(int j = 0; j < width; ++j){
@@ -100,7 +120,7 @@ static int moved = 0;
 static int fr = 0;
 static int prev = 0;
 
-void moveVert(int up, int field[][4], int *empty){
+void moveVert(int up, int field[][width], int *empty){
 	moved = 0;
 	for(int i = 0; i < width; ++i){
 		fr = 0;
@@ -135,7 +155,7 @@ void moveVert(int up, int field[][4], int *empty){
 	}
 }
 
-void moveHoriz(int left, int field[][4], int *empty){
+void moveHoriz(int left, int field[][width], int *empty){
 	moved = 0;
 	for(int i = 0; i < height; ++i){
 		fr = 0;
