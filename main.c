@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <curses.h>
+=======
+>>>>>>> 59c74d2dc3b69199c9b98412785adc294a24a3ee
 #define width 4
 #define height 4
 #define probOf2 0.05
@@ -83,7 +86,11 @@ void showField(int f[][width]){
 	//printw("\nScore: %i\n", score);
 	mvprintw(0, 0, "SCORE: %i", score);
 	for(int i = 0; i < height; ++i){
+<<<<<<< HEAD
 		mvprintw(fy + i * cvertpad, fx, "||");
+=======
+		printf("\n\n\n");
+>>>>>>> 59c74d2dc3b69199c9b98412785adc294a24a3ee
 		for(int j = 0; j < width; ++j){
 			if(f[i][j] != 0){
 				printw("%4i||", f[i][j]);
